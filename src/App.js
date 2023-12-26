@@ -1,23 +1,35 @@
-import logo from './logo.svg';
+import { useState, useEffect, useRef } from "react";
 import './App.css';
 
 function App() {
+  const [sec, setSec] = useState()
+  const secNeedleRef = useRef(null)
+
+  useEffect(()=>{
+    const secInterval = setInterval(() => {
+      const date = new Date()
+      setSec(date.getSeconds())
+    }, 1000);
+    return () => {
+      clearInterval(secInterval)
+    }
+  }, [])
+  
+
+  useEffect(()=>{
+    const degree = 360/60*sec
+    secNeedleRef.current.style.transform = `rotate(${degree})`
+  }, [sec])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="clock">
+        <div className="hours"></div>
+        <div className="minuts"></div>
+        <div className="secends">
+          <img ref={secNeedleRef} width="198px" height="9px" src='./clock-assets/sec-needle.png' />
+        </div>
+      </div>
     </div>
   );
 }
